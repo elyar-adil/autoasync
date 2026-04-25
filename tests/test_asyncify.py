@@ -127,6 +127,32 @@ def test_reset_autoasync_clears_configuration_and_cached_pools():
     assert None in core._thread_pools
 
 
+def test_reset_autoasync_waits_for_process_pools_to_shutdown(monkeypatch):
+    shutdown_calls = []
+
+    class FakeThreadPool:
+        def shutdown(self, wait=False):
+            shutdown_calls.append(("thread", wait))
+
+    class FakeProcessPool:
+        def shutdown(self, wait=False):
+            shutdown_calls.append(("process", wait))
+
+    monkeypatch.setattr(core, "_thread_pools", {1: FakeThreadPool()})
+    monkeypatch.setattr(core, "_process_pools", {2: FakeProcessPool()})
+    monkeypatch.setattr(core, "_thread_pool_max_workers", 1)
+    monkeypatch.setattr(core, "_process_pool_max_workers", 2)
+
+    reset_autoasync()
+
+    assert ("thread", False) in shutdown_calls
+    assert ("process", True) in shutdown_calls
+    assert core._thread_pools == {}
+    assert core._process_pools == {}
+    assert core._thread_pool_max_workers is None
+    assert core._process_pool_max_workers is None
+
+
 def test_use_process_rejects_nested_function():
     with pytest.raises(TypeError, match="module-level functions"):
         @autoasync(use_process=True)

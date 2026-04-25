@@ -101,7 +101,7 @@ def reset_autoasync() -> None:
     for pool in thread_pools:
         pool.shutdown(wait=False)
     for pool in process_pools:
-        pool.shutdown(wait=False)
+        pool.shutdown(wait=True)
 
 
 def _validate_process_target(fn: Callable[..., Any]) -> Tuple[str, str]:
