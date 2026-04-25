@@ -5,12 +5,16 @@ The call only blocks when you actually use the result.
 
 ```python
 from autoasync import autoasync
-import importlib
 
-torch = autoasync(importlib.import_module)("torch")
 
-load_dataset(...)                 # runs in parallel with the import
-model = torch.nn.Linear(10, 1)    # blocks here only if torch is not ready yet
+def load_report(path):
+    ...
+
+
+report = autoasync(load_report)("report.csv")
+
+prepare_page()                    # runs while load_report works in background
+print(report)                     # blocks here only if the result is not ready yet
 ```
 
 ## Why use this instead of `async` / `await`?
@@ -108,7 +112,14 @@ def fetch(url):
     ...
 
 
+def crunch(n):
+    return sum(range(n))
+
+
 crunch_async = autoasync(use_process=True)(crunch)
+
+page = fetch("https://example.com")   # uses the configured thread pool
+total = crunch_async(10_000_000)      # uses the configured process pool
 ```
 
 Configuration changes apply to future built-in pools only. Existing cached pools are not replaced.
