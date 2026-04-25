@@ -11,7 +11,8 @@ def load_report(path):
     ...
 
 
-report = autoasync(load_report)("report.csv")
+load_report_async = autoasync(load_report)
+report = load_report_async("report.csv")
 
 prepare_page()                    # runs while load_report works in background
 print(report)                     # blocks here only if the result is not ready yet
@@ -72,13 +73,12 @@ combined = a + "\n" + b + "\n" + c
 from autoasync import autoasync
 
 
+@autoasync(use_process=True)
 def crunch(n: int) -> int:
     return sum(range(n))
 
 
-crunch_async = autoasync(use_process=True)(crunch)
-
-result = crunch_async(10_000_000)
+result = crunch(10_000_000)
 do_other_work()
 print(result)
 ```
@@ -112,14 +112,13 @@ def fetch(url):
     ...
 
 
+@autoasync(use_process=True)
 def crunch(n):
     return sum(range(n))
 
 
-crunch_async = autoasync(use_process=True)(crunch)
-
 page = fetch("https://example.com")   # uses the configured thread pool
-total = crunch_async(10_000_000)      # uses the configured process pool
+total = crunch(10_000_000)            # uses the configured process pool
 ```
 
 Configuration changes apply to future built-in pools only. Existing cached pools are not replaced.
@@ -158,7 +157,8 @@ The background result is resolved once and then cached.
 `is` checks object identity and cannot be overloaded in Python. That means:
 
 ```python
-result = autoasync(lambda: True)()
+resolve_true = autoasync(lambda: True)
+result = resolve_true()
 
 result == True         # works
 bool(result) is True   # works

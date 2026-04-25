@@ -7,7 +7,7 @@ name = "autoasync"
 version = "0.1.1"
 description = "Retrofit concurrency into synchronous Python code: start work in the background now, block only when the result is actually used."
 readme = "README.md"
-license = "MIT"
+license = { file = "LICENSE" }
 authors = [{ name = "elyar-adil", email = "elyar-adil@users.noreply.github.com" }]
 keywords = ["async", "lazy", "proxy", "threading", "concurrent"]
 classifiers = [
