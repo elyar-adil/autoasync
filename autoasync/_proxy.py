@@ -3,6 +3,7 @@ LazyProxy — 透明代理一个尚未完成的后台任务结果。
 访问任意属性/运算/转换时，自动阻塞等待结果就绪（仅一次）。
 """
 
+import asyncio
 import math
 import operator
 from concurrent.futures import Future
@@ -180,7 +181,17 @@ class LazyProxy:
     def __get__(self, obj, objtype=None):
         return self._resolve().__get__(obj, objtype)
 
-    # ── await 支持（结果本身是协程时） ────────────────────────────────────────
+    # ── await 支持（等待底层 Future 并返回最终结果） ───────────────────────────
 
     def __await__(self):
-        return self._resolve().__await__()
+        async def _wait_for_result():
+            cache = object.__getattribute__(self, "_lp_cache")
+            if cache is not _MISSING:
+                return cache
+
+            fut: Future = object.__getattribute__(self, "__wrapped_future__")
+            result = await asyncio.wrap_future(fut)
+            object.__setattr__(self, "_lp_cache", result)
+            return result
+
+        return _wait_for_result().__await__()

@@ -1,3 +1,4 @@
+import asyncio
 import sys, time, operator, math, tempfile, os
 sys.path.insert(0, ".")
 
@@ -124,3 +125,20 @@ def test_concurrent():
     c = make(3, delay=0.3)
     assert a + b + c == 6
     assert time.perf_counter() - t0 < 0.6
+
+
+def test_await_plain_value():
+    async def run():
+        return await make(42)
+
+    assert asyncio.run(run()) == 42
+
+
+def test_await_cached_value():
+    proxy = make(99)
+    assert int(proxy) == 99
+
+    async def run():
+        return await proxy
+
+    assert asyncio.run(run()) == 99

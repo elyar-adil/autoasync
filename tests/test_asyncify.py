@@ -1,3 +1,4 @@
+import asyncio
 import importlib
 import sys
 import time
@@ -21,6 +22,12 @@ def slow_add(a, b, delay=0.05):
     return a + b
 
 
+@autoasync
+async def async_identity(value, delay=0.01):
+    await asyncio.sleep(delay)
+    return value
+
+
 @pytest.fixture(autouse=True)
 def reset_autoasync_state():
     reset_autoasync()
@@ -35,6 +42,20 @@ def test_returns_lazy_proxy():
 
 def test_correct_result():
     assert slow_add(3, 4) == 7
+
+
+def test_await_sync_result():
+    async def run():
+        return await slow_add(3, 4)
+
+    assert asyncio.run(run()) == 7
+
+
+def test_await_async_result():
+    async def run():
+        return await async_identity(7)
+
+    assert asyncio.run(run()) == 7
 
 
 def test_concurrent():
