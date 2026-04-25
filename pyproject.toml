@@ -4,16 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autoasync"
-version = "0.1.0"
-description = "Wrap any sync function to return a LazyProxy; run in the background and block only when the result is used."
+version = "0.1.1"
+description = "Retrofit concurrency into synchronous Python code: start work in the background now, block only when the result is actually used."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "elyar-adil", email = "elyar-adil@users.noreply.github.com" }]
 keywords = ["async", "lazy", "proxy", "threading", "concurrent"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
