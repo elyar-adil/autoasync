@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autoasync"
-version = "0.1.1"
+version = "0.1.2"
 description = "Retrofit concurrency into synchronous Python code: start work in the background now, block only when the result is actually used."
 readme = "README.md"
 license = { file = "LICENSE" }
