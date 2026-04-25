@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoasync"
+version = "0.1.0"
+description = "Wrap any sync function to return a LazyProxy; run in the background and block only when the result is used."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "elyar-adil", email = "elyar-adil@users.noreply.github.com" }]
+keywords = ["async", "lazy", "proxy", "threading", "concurrent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Distributed Computing",
+]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov"]
+
+[project.urls]
+Homepage = "https://github.com/elyar-adil/autoasync"
+Repository = "https://github.com/elyar-adil/autoasync"
+Issues = "https://github.com/elyar-adil/autoasync/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["autoasync*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
